@@ -2,7 +2,7 @@ package kbinxml
 
 import "github.com/beevik/etree"
 
-//IterWalker structure
+// IterWalker structure
 type IterWalker struct {
 	doc  *etree.Document
 	node *nodeWalker
@@ -42,5 +42,4 @@ func (i *IterWalker) Walk() (node *etree.Element, event string) {
 		i.node}
 	i.node = newNode
 	return i.node.node, "start"
-
 }

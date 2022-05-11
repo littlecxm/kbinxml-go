@@ -42,150 +42,145 @@ type ByteOffsets struct {
 
 func (b *ByteOffsets) Align(reader io.Seeker) {
 	offset, _ := reader.Seek(0, io.SeekCurrent)
-
-	//fmt.Printf("OFFSET %0X %0X\n", offset, b)
 	if offset%4 != 0 {
 		offset = (offset - offset%4) + 4
 	}
 	newMaxOffset := int64(math.Max(float64(offset), float64(b.offset4)))
-	//fmt.Println("NEW OFFSET", offset)
 	if offset > b.offset4 {
 		b.offset4 = newMaxOffset
 	}
-	//// LOG.Printf("ALIGN 2: %0X %v", b.offset2, b.offset2%4)
 	if b.offset2%4 == 0 {
 		b.offset2 = newMaxOffset
 	}
 	if b.offset1%4 == 0 {
 		b.offset1 = newMaxOffset
 	}
-	//fmt.Println(b)
 }
 
 var nodeTypes = map[byte]KbinNodeType{
-	TYPE_S8:     {"s8", 1, 1, true},
-	TYPE_U8:     {"u8", 1, 1, false},
-	TYPE_S16:    {"s16", 2, 1, true},
-	TYPE_U16:    {"u16", 2, 1, false},
-	TYPE_S32:    {"s32", 4, 1, true},
-	TYPE_U32:    {"u32", 4, 1, false},
-	TYPE_S64:    {"s64", 8, 1, true},
-	TYPE_U64:    {"u64", 8, 1, false},
-	TYPE_BIN:    {"bin", 1, 0, false},
-	TYPE_STR:    {"str", 1, 0, false},
-	TYPE_IP4:    {"ip4", 1, 4, false},
-	TYPE_TIME:   {"time", 4, 1, false},
-	TYPE_FLOAT:  {"float", 4, 1, true},
-	TYPE_DOUBLE: {"double", 8, 1, false},
-	TYPE_2S8:    {"2s8", 1, 2, true},
-	TYPE_2U8:    {"2u8", 1, 2, false},
-	TYPE_2S16:   {"2s16", 2, 2, false},
-	TYPE_2U16:   {"2u16", 2, 2, false},
-	TYPE_2S32:   {"2s32", 4, 2, true},
-	TYPE_2U32:   {"2u32", 4, 2, false},
-	TYPE_2S64:   {"2s64", 8, 2, true},
-	TYPE_2U64:   {"2u64", 8, 2, false},
-	TYPE_2F:     {"2f", 4, 2, false},
-	TYPE_2D:     {"2d", 8, 2, false},
-	TYPE_3S8:    {"3s8", 1, 3, true},
-	TYPE_3U8:    {"3u8", 1, 3, false},
-	TYPE_3S16:   {"3s16", 2, 3, false},
-	TYPE_3U16:   {"3u16", 2, 3, false},
-	TYPE_3S32:   {"3s32", 4, 3, true},
-	TYPE_3U32:   {"3u32", 4, 3, false},
-	TYPE_3S64:   {"3s64", 8, 3, true},
-	TYPE_3U64:   {"3u64", 8, 3, false},
-	TYPE_3F:     {"3f", 4, 3, false},
-	TYPE_3D:     {"3d", 8, 3, false},
-	TYPE_4S8:    {"4s8", 1, 4, true},
-	TYPE_4U8:    {"4u8", 1, 4, false},
-	TYPE_4S16:   {"4s16", 2, 4, false},
-	TYPE_4U16:   {"4u16", 2, 4, false},
-	TYPE_4S32:   {"4s32", 4, 4, true},
-	TYPE_4U32:   {"4u32", 4, 4, false},
-	TYPE_4S64:   {"4s64", 8, 4, true},
-	TYPE_4U64:   {"4u64", 8, 4, false},
-	TYPE_4F:     {"4f", 4, 4, false},
-	TYPE_4D:     {"4d", 8, 4, false},
-	TYPE_VS8:    {"vs8", 1, 16, true},
-	TYPE_VU8:    {"vu8", 1, 16, false},
-	TYPE_VS16:   {"vs16", 2, 8, true},
-	TYPE_VU16:   {"vu16", 2, 8, false},
-	TYPE_BOOL:   {"bool", 1, 1, false},
-	TYPE_2B:     {"2b", 1, 2, false},
-	TYPE_3B:     {"3b", 1, 3, false},
-	TYPE_4B:     {"4b", 1, 4, false},
-	TYPE_VB:     {"vb", 1, 16, false},
+	TypeS8:     {"s8", 1, 1, true},
+	TypeU8:     {"u8", 1, 1, false},
+	TypeS16:    {"s16", 2, 1, true},
+	TypeU16:    {"u16", 2, 1, false},
+	TypeS32:    {"s32", 4, 1, true},
+	TypeU32:    {"u32", 4, 1, false},
+	TypeS64:    {"s64", 8, 1, true},
+	TypeU64:    {"u64", 8, 1, false},
+	TypeBin:    {"bin", 1, 0, false},
+	TypeStr:    {"str", 1, 0, false},
+	TypeIp4:    {"ip4", 1, 4, false},
+	TypeTime:   {"time", 4, 1, false},
+	TypeFloat:  {"float", 4, 1, true},
+	TypeDouble: {"double", 8, 1, false},
+	Type2s8:    {"2s8", 1, 2, true},
+	Type2u8:    {"2u8", 1, 2, false},
+	Type2s16:   {"2s16", 2, 2, false},
+	Type2u16:   {"2u16", 2, 2, false},
+	Type2s32:   {"2s32", 4, 2, true},
+	Type2u32:   {"2u32", 4, 2, false},
+	Type2s64:   {"2s64", 8, 2, true},
+	Type2u64:   {"2u64", 8, 2, false},
+	Type2f:     {"2f", 4, 2, false},
+	Type2d:     {"2d", 8, 2, false},
+	Type3s8:    {"3s8", 1, 3, true},
+	Type3u8:    {"3u8", 1, 3, false},
+	Type3s16:   {"3s16", 2, 3, false},
+	Type3u16:   {"3u16", 2, 3, false},
+	Type3s32:   {"3s32", 4, 3, true},
+	Type3u32:   {"3u32", 4, 3, false},
+	Type3s64:   {"3s64", 8, 3, true},
+	Type3u64:   {"3u64", 8, 3, false},
+	Type3f:     {"3f", 4, 3, false},
+	Type3d:     {"3d", 8, 3, false},
+	Type4s8:    {"4s8", 1, 4, true},
+	Type4u8:    {"4u8", 1, 4, false},
+	Type4s16:   {"4s16", 2, 4, false},
+	Type4u16:   {"4u16", 2, 4, false},
+	Type4s32:   {"4s32", 4, 4, true},
+	Type4u32:   {"4u32", 4, 4, false},
+	Type4s64:   {"4s64", 8, 4, true},
+	Type4u64:   {"4u64", 8, 4, false},
+	Type4f:     {"4f", 4, 4, false},
+	Type4d:     {"4d", 8, 4, false},
+	TypeVs8:    {"vs8", 1, 16, true},
+	TypeVu8:    {"vu8", 1, 16, false},
+	TypeVs16:   {"vs16", 2, 8, true},
+	TypeVu16:   {"vu16", 2, 8, false},
+	TypeBool:   {"bool", 1, 1, false},
+	Type2b:     {"2b", 1, 2, false},
+	Type3b:     {"3b", 1, 3, false},
+	Type4b:     {"4b", 1, 4, false},
+	TypeVb:     {"vb", 1, 16, false},
 }
 
 var numberTypes = map[string]byte{
-	"b":    TYPE_BOOL,
-	"bool": TYPE_BOOL,
-	"s8":   TYPE_S8,
-	"u8":   TYPE_U8,
-	"s16":  TYPE_S16,
-	"u16":  TYPE_U16,
-	"s32":  TYPE_S32,
-	"u32":  TYPE_U32,
-	"s64":  TYPE_S64,
-	"u64":  TYPE_U64,
-	"time": TYPE_TIME,
+	"b":    TypeBool,
+	"bool": TypeBool,
+	"s8":   TypeS8,
+	"u8":   TypeU8,
+	"s16":  TypeS16,
+	"u16":  TypeU16,
+	"s32":  TypeS32,
+	"u32":  TypeU32,
+	"s64":  TypeS64,
+	"u64":  TypeU64,
+	"time": TypeTime,
 }
 
 const (
-	TYPE_S8     = 2
-	TYPE_U8     = 3
-	TYPE_S16    = 4
-	TYPE_U16    = 5
-	TYPE_S32    = 6
-	TYPE_U32    = 7
-	TYPE_S64    = 8
-	TYPE_U64    = 9
-	TYPE_BIN    = 10
-	TYPE_STR    = 11
-	TYPE_IP4    = 12
-	TYPE_TIME   = 13
-	TYPE_FLOAT  = 14
-	TYPE_DOUBLE = 15
-	TYPE_2S8    = 16
-	TYPE_2U8    = 17
-	TYPE_2S16   = 18
-	TYPE_2U16   = 19
-	TYPE_2S32   = 20
-	TYPE_2U32   = 21
-	TYPE_2S64   = 22
-	TYPE_2U64   = 23
-	TYPE_2F     = 24
-	TYPE_2D     = 25
-	TYPE_3S8    = 26
-	TYPE_3U8    = 27
-	TYPE_3S16   = 28
-	TYPE_3U16   = 29
-	TYPE_3S32   = 30
-	TYPE_3U32   = 31
-	TYPE_3S64   = 32
-	TYPE_3U64   = 33
-	TYPE_3F     = 34
-	TYPE_3D     = 35
-	TYPE_4S8    = 36
-	TYPE_4U8    = 37
-	TYPE_4S16   = 38
-	TYPE_4U16   = 39
-	TYPE_4S32   = 40
-	TYPE_4U32   = 41
-	TYPE_4S64   = 42
-	TYPE_4U64   = 43
-	TYPE_4F     = 44
-	TYPE_4D     = 45
-	TYPE_VS8    = 48
-	TYPE_VU8    = 49
-	TYPE_VS16   = 50
-	TYPE_VU16   = 51
-	TYPE_BOOL   = 52
-	TYPE_2B     = 53
-	TYPE_3B     = 54
-	TYPE_4B     = 55
-	TYPE_VB     = 56
+	TypeS8     = 2
+	TypeU8     = 3
+	TypeS16    = 4
+	TypeU16    = 5
+	TypeS32    = 6
+	TypeU32    = 7
+	TypeS64    = 8
+	TypeU64    = 9
+	TypeBin    = 10
+	TypeStr    = 11
+	TypeIp4    = 12
+	TypeTime   = 13
+	TypeFloat  = 14
+	TypeDouble = 15
+	Type2s8    = 16
+	Type2u8    = 17
+	Type2s16   = 18
+	Type2u16   = 19
+	Type2s32   = 20
+	Type2u32   = 21
+	Type2s64   = 22
+	Type2u64   = 23
+	Type2f     = 24
+	Type2d     = 25
+	Type3s8    = 26
+	Type3u8    = 27
+	Type3s16   = 28
+	Type3u16   = 29
+	Type3s32   = 30
+	Type3u32   = 31
+	Type3s64   = 32
+	Type3u64   = 33
+	Type3f     = 34
+	Type3d     = 35
+	Type4s8    = 36
+	Type4u8    = 37
+	Type4s16   = 38
+	Type4u16   = 39
+	Type4s32   = 40
+	Type4u32   = 41
+	Type4s64   = 42
+	Type4u64   = 43
+	Type4f     = 44
+	Type4d     = 45
+	TypeVs8    = 48
+	TypeVu8    = 49
+	TypeVs16   = 50
+	TypeVu16   = 51
+	TypeBool   = 52
+	Type2b     = 53
+	Type3b     = 54
+	Type4b     = 55
+	TypeVb     = 56
 )
 const (
 	controlNodeStart = 1
@@ -212,17 +207,13 @@ var encodings = map[byte]*KbinEncoding{
 	EncodingUTF_8:      {5, "UTF-8", nil, nil},
 }
 
-// var LOG = LOG.New()
-
 func DeserializeKbin(input []byte) ([]byte, *KbinEncoding, error) {
-	// LOG.SetLevel(LOG.DebugLevel)
 	reader := bytes.NewReader(input)
 
 	//Check Magic Number
 	magicNumber := make([]byte, 2)
 	reader.Read(magicNumber)
 	if binary.BigEndian.Uint16(magicNumber) != MagicNumber {
-		fmt.Errorf("ERROR: Incorrect Magic Number: %v", magicNumber)
 		return nil, nil, errors.New("incorrect magic number")
 	}
 
@@ -232,7 +223,6 @@ func DeserializeKbin(input []byte) ([]byte, *KbinEncoding, error) {
 
 	encChk, _ := reader.ReadByte()
 	if 0xFF&^enc != encChk {
-		fmt.Errorf("ERROR: Invalid encoding checksum, data corruption detected")
 		return nil, nil, errors.New("invalid encoding checksum, data corruption detected")
 	}
 
@@ -251,7 +241,7 @@ func parseDocument(document *etree.Document, nodes []byte, data []byte, enc *Kbi
 	var curNode *etree.Element
 	offsets := &ByteOffsets{0, 0, 0}
 	nodeReader := bytes.NewReader(nodes)
-	datareader := bytes.NewReader(data)
+	dataReader := bytes.NewReader(data)
 
 	for {
 		nodeTypeId, _ := nodeReader.ReadByte()
@@ -262,63 +252,49 @@ func parseDocument(document *etree.Document, nodes []byte, data []byte, enc *Kbi
 			nodeTypeId -= 0x40
 		}
 
-		// LOG.Debugf("TypeID %v, Array: %v", nodeTypeId, isArray)
 		nodeType := nodeTypes[nodeTypeId]
-		// LOG.Debugf("OFFSETS 1:%0X 2:%0X 4:%0X", offsets.offset1, offsets.offset2, offsets.offset4)
 		switch nodeTypeId {
 		case controlNodeStart:
 			name := parseSixbit(nodeReader)
-			// LOG.Debugln("CONTROL_NODE_START")
 			curNode = newNode(curNode, name)
 		case controlAttribute:
 			name := parseSixbit(nodeReader)
-			// LOG.Debugln("CONTROL_ATTRIBUTE", name)
-			datareader.Seek(offsets.offset4, io.SeekStart)
-			attributeValue := getSegment(datareader)
-			offsets.Align(datareader)
+			dataReader.Seek(offsets.offset4, io.SeekStart)
+			attributeValue := getSegment(dataReader)
+			offsets.Align(dataReader)
 			value := transformString(attributeValue, enc)
 			curNode.CreateAttr(name, value)
-			// LOG.Debugf("NEW ATTR: [%s] %s", name, value)
 		case controlNodeEnd:
-			// LOG.Debugln("CONTROL_NODE_END")
 			if curNode.Parent() != nil {
 				curNode = curNode.Parent()
 			}
 		case controlFileEnd:
-			// LOG.Debugln("CONTROL_FILE_END")
 			document.AddChild(curNode)
-			// LOG.Debugln(document.WriteToString())
 			return
-		case TYPE_STR:
+		case TypeStr:
 			name := parseSixbit(nodeReader)
-			// LOG.Debugf("TYPE_%s", nodeType.Name)
-			datareader.Seek(offsets.offset4, io.SeekStart)
-			valueBytes := getSegment(datareader)
-			offsets.Align(datareader)
+			dataReader.Seek(offsets.offset4, io.SeekStart)
+			valueBytes := getSegment(dataReader)
+			offsets.Align(dataReader)
 			value := transformString(valueBytes, enc)
 			curNode = addLeaf(curNode, name, value, nodeType.Name, len(value), 0, nodeType)
-		case TYPE_TIME, TYPE_FLOAT, TYPE_DOUBLE, TYPE_U8, TYPE_S8, TYPE_U16, TYPE_S16, TYPE_U32, TYPE_S32, TYPE_U64, TYPE_S64:
+		case TypeTime, TypeFloat, TypeDouble, TypeU8, TypeS8, TypeU16, TypeS16, TypeU32, TypeS32, TypeU64, TypeS64:
 			name := parseSixbit(nodeReader)
-			// LOG.Debugf("TYPE_%s %s", nodeType.Name, name)
-			value, dataSize := extractNumber(datareader, offsets, nodeType, isArray)
+			value, dataSize := extractNumber(dataReader, offsets, nodeType, isArray)
 			curNode = addLeaf(curNode, name, value, nodeType.Name, int(dataSize), int(dataSize)/nodeType.Size, nodeType)
-		case TYPE_BOOL, TYPE_2B, TYPE_3B, TYPE_4B:
+		case TypeBool, Type2b, Type3b, Type4b:
 			name := parseSixbit(nodeReader)
-			// LOG.Debugf("TYPE_%s", nodeType.Name)
-			value, dataSize := extractBool(datareader, offsets, nodeType, isArray)
+			value, dataSize := extractBool(dataReader, offsets, nodeType, isArray)
 			curNode = addLeaf(curNode, name, value, nodeType.Name, int(dataSize), int(dataSize)/nodeType.Size, nodeType)
-		case TYPE_BIN:
+		case TypeBin:
 			name := parseSixbit(nodeReader)
-			// LOG.Debugf("TYPE_%s", nodeType.Name)
-			value, dataSize := extractBin(datareader, offsets)
+			value, dataSize := extractBin(dataReader, offsets)
 			curNode = addLeaf(curNode, name, value, nodeType.Name, int(dataSize), 1, nodeType)
-		case TYPE_IP4:
+		case TypeIp4:
 			name := parseSixbit(nodeReader)
-			// LOG.Debugf("TYPE_%s", nodeType.Name)
-			value := extractIp4(datareader, offsets)
+			value := extractIp4(dataReader, offsets)
 			curNode = addLeaf(curNode, name, value, nodeType.Name, 0, 0, nodeType)
 		default:
-			// LOG.Errorln("CONTROL_UNKNOWN, ", nodeTypeId, nodeType.Name)
 			return
 		}
 	}
@@ -364,8 +340,6 @@ func addLeaf(curNode *etree.Element, name string, value string, leafType string,
 		curNode.CreateAttr("__count", strconv.Itoa(count))
 	}
 	curNode.SetText(value)
-
-	// LOG.Debugf("New Leaf: [%v] [%v] __type %v __size %v __count %v", name, value, leafType, size, count)
 	return curNode
 }
 
@@ -380,7 +354,6 @@ func extractBool(reader *bytes.Reader, offsets *ByteOffsets, nodeType KbinNodeTy
 		offsets.Align(reader)
 		dataSize = binary.BigEndian.Uint32(lengthBytes)
 		count = int(dataSize) / size
-		// LOG.Debug("ARRAY /", size, dataSize, count, offset)
 	} else {
 		dataSize = uint32(nodeType.Size)
 	}
@@ -395,15 +368,15 @@ func extractBool(reader *bytes.Reader, offsets *ByteOffsets, nodeType KbinNodeTy
 	return output[:len(output)-1], dataSize
 }
 
-func (offsets *ByteOffsets) getOffset(dataSize uint32) *int64 {
+func (b *ByteOffsets) getOffset(dataSize uint32) *int64 {
 	var offset *int64
 	switch dataSize {
 	case 1:
-		offset = &offsets.offset1
+		offset = &b.offset1
 	case 2:
-		offset = &offsets.offset2
+		offset = &b.offset2
 	default:
-		offset = &offsets.offset4
+		offset = &b.offset4
 	}
 	return offset
 }
@@ -419,8 +392,6 @@ func extractNumber(reader *bytes.Reader, offsets *ByteOffsets, nodeType KbinNode
 		offsets.Align(reader)
 		dataSize = binary.BigEndian.Uint32(lengthBytes)
 		count = int(dataSize) / size
-		// LOG.Debugf("Array found, data %v, length %v, count %v", lengthBytes, dataSize, count)
-		// LOG.Debug("ARRAY /", size, dataSize, count, offset)
 	} else {
 		dataSize = uint32(nodeType.Size)
 	}
@@ -437,9 +408,7 @@ func extractNumber(reader *bytes.Reader, offsets *ByteOffsets, nodeType KbinNode
 		case 2:
 			number = uint(binary.BigEndian.Uint16(numberBytes))
 		case 4:
-			//fmt.Println(numberBytes)
 			number = uint(binary.BigEndian.Uint32(numberBytes))
-			//fmt.Println(number)
 		case 8:
 			number = uint(binary.BigEndian.Uint64(numberBytes))
 		}
@@ -456,9 +425,6 @@ func extractNumber(reader *bytes.Reader, offsets *ByteOffsets, nodeType KbinNode
 			case 8:
 				numStr = fmt.Sprint(int64(number))
 			}
-			//if size == 4 {
-			//	//fmt.Println(number, numStr, uint(binary.LittleEndian.Uint32(numberBytes)), hex.EncodeToString(numberBytes))
-			//}
 			if nodeType.Name == "float" || nodeType.Name == "double" {
 				numStr = numStr[:len(numStr)-6] + "." + numStr[len(numStr)-6:]
 			}
@@ -488,7 +454,6 @@ func transformString(input []byte, enc *KbinEncoding) string {
 }
 
 func newNode(curNode *etree.Element, name string) *etree.Element {
-	// LOG.Debugf("NEW NODE: [%s]", name)
 	newNode := etree.NewElement(name)
 	if curNode != nil {
 		curNode.AddChild(newNode)
@@ -538,8 +503,6 @@ func getSegment(reader *bytes.Reader) []byte {
 }
 
 func SerializeKbin(document *etree.Document, encoding int) (output []byte) {
-	//// LOG.SetLevel(// LOG.DebugLevel)
-	// Add magic numbers
 	output = append(output, []byte{0xa0, 0x42}...)
 
 	// Add encoding and checksum
@@ -556,13 +519,9 @@ func SerializeKbin(document *etree.Document, encoding int) (output []byte) {
 
 	node, event := document.Root(), "start"
 	for {
-		//fmt.Println("event", event)
-		//fmt.Printf("Node: Tag(%v) Text(%v) Attr(%v)\n", node.Tag, node.Text(), node.Attr)
 		if event == "end" {
 			nodes = append(nodes, controlNodeEnd|0x40)
 			node, event = iw.Walk()
-			//data, _ := ioutil.ReadAll(dataWriter.Reader())
-			//fmt.Printf("%0X\n%0X\n\n", nodes, data)
 			continue
 		} else if event == "eof" {
 			nodes = append(nodes, controlFileEnd|0x40)
@@ -571,17 +530,14 @@ func SerializeKbin(document *etree.Document, encoding int) (output []byte) {
 			}
 			data, _ = ioutil.ReadAll(dataWriter.Reader())
 			data = append(data, bytes.Repeat([]byte{00}, int(offsets.offset4)-len(data))...)
-			//fmt.Printf("%0X\n%0X\n\n", nodes, data)
 			break
 		}
 
 		leafAttr := node.SelectAttr("__type")
 		if leafAttr != nil { // leaf
-			//fmt.Println("This is a leaf", node.Tag)
-			// LOG.Debugf("%v %v OFFSETS 1:%0X 2:%0X 4:%0X", node.Tag, node.SelectAttr("__type").Value, offsets.offset1, offsets.offset2, offsets.offset4)
 			switch node.SelectAttr("__type").Value {
 			case "str":
-				nodes = append(nodes, []byte{TYPE_STR, byte(len(node.Tag))}...)
+				nodes = append(nodes, []byte{TypeStr, byte(len(node.Tag))}...)
 				nodes = append(nodes, toSixbit(node.Tag)...)
 				attrLength := make([]byte, 4)
 				value, _ := encoder.Encoder.Bytes([]byte(node.Text()))
@@ -596,7 +552,7 @@ func SerializeKbin(document *etree.Document, encoding int) (output []byte) {
 				dataWriter.Write(value)
 				offsets.Align(dataWriter)
 			case "bin":
-				nodes = append(nodes, []byte{TYPE_BIN, byte(len(node.Tag))}...)
+				nodes = append(nodes, []byte{TypeBin, byte(len(node.Tag))}...)
 				nodes = append(nodes, toSixbit(node.Tag)...)
 				binLength := make([]byte, 4)
 				data, _ := hex.DecodeString(node.Text())
@@ -610,7 +566,7 @@ func SerializeKbin(document *etree.Document, encoding int) (output []byte) {
 				dataWriter.Write(data)
 				offsets.Align(dataWriter)
 			case "f", "float":
-				nodes = append(nodes, []byte{TYPE_FLOAT, byte(len(node.Tag))}...)
+				nodes = append(nodes, []byte{TypeFloat, byte(len(node.Tag))}...)
 				nodes = append(nodes, toSixbit(node.Tag)...)
 				dataWriter.Seek(offsets.offset4, io.SeekStart)
 				floatStr := node.Text()
@@ -628,14 +584,13 @@ func SerializeKbin(document *etree.Document, encoding int) (output []byte) {
 				dataWriter.Write(floatBytes)
 				offsets.Align(dataWriter)
 			case "ip4":
-				num := TYPE_IP4
+				num := TypeIp4
 				addresses := strings.Split(node.Text(), " ")
 				realNum := byte(num)
 				if len(addresses) > 1 {
 					realNum |= 0x40
 				}
 				if len(addresses) > 1 {
-					//fmt.Println("ARRAY")
 					arrayLength := make([]byte, 4)
 					binary.BigEndian.PutUint32(arrayLength, uint32(len(addresses)*4))
 					dataWriter.Seek(offsets.offset4, io.SeekStart)
@@ -657,10 +612,8 @@ func SerializeKbin(document *etree.Document, encoding int) (output []byte) {
 			case "time", "b", "bool", "u8", "s8", "u16", "s16", "u32", "s32", "u64", "s64":
 				num := numberTypes[node.SelectAttr("__type").Value]
 				numbers := strings.Split(node.Text(), " ")
-				// LOG.Debugln(node.Tag, numbers)
 				realNum := num
 				if len(numbers) > 1 {
-					// LOG.Debugln(node.Tag, "IS_ARRAY")
 					realNum |= 0x40
 				}
 				nodes = append(nodes, []byte{realNum, byte(len(node.Tag))}...)
@@ -668,28 +621,21 @@ func SerializeKbin(document *etree.Document, encoding int) (output []byte) {
 				nt := nodeTypes[num]
 				size := nt.Size * len(numbers)
 
-				//fmt.Printf("%0X\n", offsets)
 				if len(numbers) > 1 {
-					//fmt.Println("ARRAY")
-					// LOG.Debugln(node.Tag, "Size", size)
 					arrayLength := make([]byte, 4)
 					binary.BigEndian.PutUint32(arrayLength, uint32(size))
 					dataWriter.Seek(offsets.offset4, io.SeekStart)
-					// LOG.Debugln(node.Tag, "OFFSET, LENGTH", offsets.offset4, arrayLength)
 					dataWriter.Write(arrayLength)
 					offsets.Align(dataWriter)
 				}
-				// LOG.Debugln(node.Tag, "Sizer", size)
 				offset := &offsets.offset1
 				if size == 2 {
 					offset = &offsets.offset2
 				} else if size > 2 {
 					offset = &offsets.offset4
 				}
-				//fmt.Println("SIZE", size, len(numbers), nt.Size)
 
 				dataWriter.Seek(*offset, io.SeekStart)
-				//fmt.Printf("%0X\n", offsets)
 				for _, v := range numbers {
 					var numberBytes = make([]byte, nt.Size)
 
@@ -726,22 +672,14 @@ func SerializeKbin(document *etree.Document, encoding int) (output []byte) {
 							number, _ = strconv.ParseUint(v, 10, 64)
 						}
 
-						//fmt.Printf("HERE %v %v %v\n", v, number, number)
 						binary.BigEndian.PutUint64(numberBytes, number)
 					}
-					//					offs, _ := dataWriter.Seek(0, io.SeekCurrent)
-					// LOG.Debugf("%v WRITING %0X", node.Tag, numberBytes)
 					dataWriter.Write(numberBytes)
 					if node.Tag == "s_coin" {
-						// data, _ := ioutil.ReadAll(dataWriter.Reader())
-						// LOG.Debugf("%0X", data)
 					}
 				}
 				*offset += int64(size)
-				//	offs, _ := dataWriter.Seek(0, io.SeekCurrent)
-				//fmt.Printf("OFFS %0X\n", offs)
 				offsets.Align(dataWriter)
-				//fmt.Printf("OFFS %0X\n", offsets)
 			default:
 				panic(fmt.Sprintf("Unsupported type %v", node.SelectAttr("__type").Value))
 			}
@@ -788,9 +726,6 @@ func SerializeKbin(document *etree.Document, encoding int) (output []byte) {
 				offsets.Align(dataWriter)
 			}
 		}
-
-		//data, _ := ioutil.ReadAll(dataWriter.Reader())
-		//fmt.Printf("%0X\n%0X\n\n", nodes, data)
 
 		node, event = iw.Walk()
 	}
